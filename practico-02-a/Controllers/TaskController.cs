@@ -25,13 +25,19 @@ public class TaskController : Controller
         };
     }
 
+    /// <summary>
+    /// Devuelve todas las tareas
+    /// </summary>
     [HttpGet]
     public ActionResult<IList<TaskDO>> GetAll()
     {
         _logger.LogInformation("Retorno lista de tareas");
         return Ok(_tasks);
     }
-
+    
+    /// <summary>
+    /// Recupera una tarea por su id
+    /// </summary>
     [HttpGet]
     [Route("{id}")]
     public ActionResult<TaskDO> GetById(long id)
@@ -40,19 +46,29 @@ public class TaskController : Controller
         return Ok(_tasks.First(task => task.Id == id));
     }
 
+    /// <summary>
+    /// Crea una nueva tarea
+    /// </summary>
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public ActionResult Create([FromBody]TaskDO task)
     {
         _logger.LogInformation($"Creo una nueva tarea con valores:\n{task}");
         this._tasks.Add(task);
-        return Ok();
+        return NoContent();
     }
 
+    /// <summary>
+    /// Elimina una tarea ya existente
+    /// </summary>
+    /// <response code="204"> Si la tarea se elimino con exito </response>
+    /// <response code="400"> Si no existe una tarea con el id </response>
     [HttpDelete]
     [Route("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult Delete(long id)
     {
-        
         _logger.LogInformation($"Eliminando tarea con id {id}");
         
         // En un CRUD mas complejo la operacion para recuperar tarea por ID estaria en un servicio
@@ -62,7 +78,6 @@ public class TaskController : Controller
         if (task == null) return BadRequest();
         
         _tasks.Remove(task);
-        return Ok();
-
+        return NoContent();
     }
 }

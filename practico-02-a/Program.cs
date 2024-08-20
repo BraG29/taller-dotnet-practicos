@@ -1,5 +1,5 @@
+using System.Reflection;
 using System.Text.Json.Serialization;
-using System.Text.Json.Serialization.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using practico_02_a.Controllers;
 using Serilog;using Task = practico_02_a.Models.Task;
@@ -16,7 +16,11 @@ builder.Services.AddMvc().AddControllersAsServices().AddJsonOptions(options =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
 
 builder.Host.UseSerilog((hostBuilderCtx, loggerConf) =>
 {
