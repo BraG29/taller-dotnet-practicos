@@ -1,0 +1,11 @@
+@practico_02_a_HostAddress = http://localhost:5125
+
+GET {{practico_02_a_HostAddress}}/todos/
+Accept: application/json
+
+###
+
+GET {{practico_02_a_HostAddress}}/todos/1
+Accept: application/json
+
+###
